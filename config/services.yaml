@@ -26,3 +26,8 @@ services:
     App\Service\Company:
         arguments:
             $companyUrl: '%env(string:COMPANY_URL)%'
+
+    App\Service\History:
+        arguments:
+            $historyUrl: '%env(string:HISTORY_URL)%'
+            $historyApiKey: '%env(string:HISTORY_API_KEY)%'
