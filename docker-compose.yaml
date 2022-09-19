@@ -1,0 +1,39 @@
+version: '3.1'
+services:
+    php:
+        build: docker/php
+        container_name: ${PROJECT_NAME:-project}_php
+        hostname: ${PROJECT_NAME:-project}-php
+        tty: true
+        stdin_open: true
+        volumes:
+          - .:/var/www
+        environment:
+          - maildev_host=${PROJECT_NAME:-project}_maildev
+        depends_on:
+            - maildev
+    #        restart: always
+
+    nginx:
+        image: nginx:latest
+        container_name: ${PROJECT_NAME:-project}_nginx
+        hostname: ${PROJECT_NAME:-project}-nginx
+        tty: true
+        stdin_open: true
+        ports:
+            - "127.0.0.1:8080:80"
+        volumes:
+            - .:/var/www
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
+#        restart: always
+
+    maildev:
+        image: maildev/maildev
+        container_name: ${PROJECT_NAME:-project}-maildev
+        hostname: ${PROJECT_NAME:-project}-maildev
+        ports:
+          - "127.0.0.1:8081:1080"
+        environment:
+            MAILDEV_SMTP_PORT: 25
