@@ -3,11 +3,12 @@
 namespace App\Service;
 
 use App\Exception\WebAccessException;
+use App\Model\CompanyInfoInterface;
 use App\Model\CompanyOptionsInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
-final class Company implements CompanyOptionsInterface
+final class Company implements CompanyOptionsInterface, CompanyInfoInterface
 {
     private array $companyData = [];
 
@@ -39,6 +40,17 @@ final class Company implements CompanyOptionsInterface
         ksort($options);
 
         return $options;
+    }
+
+    /**
+     * @throws WebAccessException
+     */
+    public function getInfo(string $symbol): ?array
+    {
+        $companies = $this->getCompanies();
+        $filteredCompanies = array_filter($companies, static fn ($company) => $company['Symbol'] === $symbol);
+
+        return array_values($filteredCompanies)[0] ?? null;
     }
 
     /**

@@ -41,4 +41,38 @@ final class CompanyTest extends TestCase
             [200, [['symbol' => 'GOOGL', 'name' => 'Google']]],
         ];
     }
+
+    /**
+     * @dataProvider getInfoTestCases
+     *
+     * @throws WebAccessException
+     */
+    public function testGetInfo(array $content, string $symbol, ?array $expected): void
+    {
+        $response = $this->createStub(MockResponse::class);
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('toArray')->willReturn($content);
+        $httpClient = $this->createStub(MockHttpClient::class);
+        $httpClient->method('request')->willReturn($response);
+        $companyService = new Company($httpClient, '');
+
+        $info = $companyService->getInfo($symbol);
+        $this->assertEquals($expected, $info);
+    }
+
+    public function getInfoTestCases(): array
+    {
+        $content = [
+            ['Symbol' => 'a', 'Company Name' => 'A'],
+            ['Symbol' => 'b', 'Company Name' => 'B'],
+            ['Symbol' => 'c', 'Company Name' => 'C'],
+            ['Symbol' => 'c', 'Company Name' => 'C'],
+        ];
+
+        return [
+            [$content, 'X', null],
+            [$content, 'b', ['Symbol' => 'b', 'Company Name' => 'B']],
+            [$content, 'c', ['Symbol' => 'c', 'Company Name' => 'C']],
+        ];
+    }
 }
