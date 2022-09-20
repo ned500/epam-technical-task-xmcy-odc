@@ -32,6 +32,7 @@ final class DefaultController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var FormData $formData */
             $formData = $form->getData();
+            $formData->endDate->modify('+1 day - 1 second'); // Include all day
 
             // Fetch data
             try {
