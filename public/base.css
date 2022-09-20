@@ -1,0 +1,15 @@
+#history {
+    margin-top: 1em;
+}
+#history td {
+    vertical-align: top;
+}
+#history-table {
+    border: solid black 2px;
+    border-collapse: collapse;
+}
+#history-table td,
+#history-table th {
+    padding: 3px 5px;
+    border: solid black 1px;
+}

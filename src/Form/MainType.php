@@ -24,11 +24,13 @@ final class MainType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'html5' => false,
+                'attr' => ['class' => 'date-fields'],
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'html5' => false,
+                'attr' => ['class' => 'date-fields'],
             ])
             ->add('email', EmailType::class)
             ->add('submit', SubmitType::class)

@@ -71,22 +71,13 @@
     </script>
 {% endmacro %}
 
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script src="{{ asset('base.js') }}"></script>
+{% endblock %}
+
 {% block stylesheets %}
-    <style>
-        #history {
-            margin-top: 1em;
-        }
-        #history td {
-            vertical-align: top;
-        }
-        #history-table {
-            border: solid black 2px;
-            border-collapse: collapse;
-        }
-        #history-table td,
-        #history-table th {
-            padding: 3px 5px;
-            border: solid black 1px;
-        }
-    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="{{ asset('base.css') }}" rel="stylesheet" />
 {% endblock %}
