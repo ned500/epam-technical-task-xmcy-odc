@@ -31,7 +31,7 @@
             <tr>
                 <td>{{ price.date|date('Y-m-d') }}</td>
                 {% for field in ['open', 'high', 'low', 'close', 'volume'] %}
-                    <td>{{ price[field]|default|round(3) }}</td>
+                    <td>{{ price[field]|default ? price[field]|default|round(3) : price[field]|default }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
@@ -41,40 +41,18 @@
 
 {% macro graph(history) %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <canvas id="chart" width="800" height="400"></canvas>
-    <script lang="js">
-        // const ctx = document.getElementById('chart');
-        const myChart = new Chart('chart', {
-            type: 'line',
-            data: {
-                labels: [{{ history.prices|map(p => ("'" ~ p.date|date('Y-m-d') ~ "'"))|join(', ')|raw }}],
-                datasets: [{
-                    label: 'Open',
-                    data: [{{ history.prices|map(p => p.open|default)|join(', ') }}],
-                    backgroundColor: ['rgba(54, 162, 235, 0.2)'],
-                    borderColor: ['rgba(54, 162, 235, 0.2)'],
-                }, {
-                    label: 'Close',
-                    data: [{{ history.prices|map(p => p.close|default)|join(', ') }}],
-                    backgroundColor: ['rgba(254, 145, 23, 0.2)'],
-                    borderColor: ['rgba(254, 145, 23, 0.2)'],
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        // beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
+    <canvas id="chart" width="800" height="400"
+            data-labels='{{ history.prices|map(p => (p.date|date('Y-m-d')))|json_encode|raw }}'
+            data-opens='{{ history.prices|map(p => p.open|default('null'))|json_encode }}'
+            data-closes='{{ history.prices|map(p => p.close|default('null'))|json_encode }}'
+    ></canvas>
 {% endmacro %}
 
 {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
     <script src="{{ asset('base.js') }}"></script>
+    <script src="{{ asset('graph.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
