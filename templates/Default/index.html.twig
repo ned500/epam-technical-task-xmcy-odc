@@ -3,6 +3,11 @@
 {% block body %}
     <h1>Trade</h1>
     {{ form_start(form) }}
+    {% if form.vars.errors is not empty %}
+    <div id="form-error-block">
+        {{ form_errors(form) }}
+    </div>
+    {% endif %}
     <table id="form">
         <tbody>
         {% for fieldName in ['symbol', 'startDate', 'endDate', 'email'] %}

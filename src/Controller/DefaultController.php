@@ -8,8 +8,10 @@ use App\Model\CompanyOptionsInterface;
 use App\Model\FormData;
 use App\Model\NotifierInterface;
 use App\Service\History;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,8 +21,6 @@ final class DefaultController extends AbstractController
      * @Route("/", name="root")
      *
      * @Template
-     *
-     * @throws WebAccessException
      *
      * @noinspection VirtualTypeCheckInspection
      */
@@ -32,8 +32,22 @@ final class DefaultController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var FormData $formData */
             $formData = $form->getData();
-            $historyData = $history->getHistory($formData->symbol, $formData->startDate, $formData->endDate);
-            $email->notify($formData, $historyData);
+
+            // Fetch data
+            try {
+                $historyData = $history->getHistory($formData->symbol, $formData->startDate, $formData->endDate);
+            } catch (WebAccessException $exception) {
+                $form->addError(new FormError('Fetch data was unsuccessful: '.$exception->getMessage()));
+            }
+
+            // Send notification
+            try {
+                if (isset($historyData)) {
+                    $email->notify($formData, $historyData);
+                }
+            } catch (Exception $exception) {
+                $form->addError(new FormError('Email send was unsuccessful: '.$exception->getMessage()));
+            }
         }
 
         return [

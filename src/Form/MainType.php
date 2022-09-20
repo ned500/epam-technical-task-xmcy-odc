@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Model\FormData;
+use Exception;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -15,10 +16,18 @@ final class MainType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        try {
+            $placeholder = '--- Please select ---';
+            $symbolOptions = $options['companyOptions']->getOptions();
+        } catch (Exception) {
+            $symbolOptions = [];
+            $placeholder = '--- There is an issue about fetching companies ---';
+        }
+
         $builder
             ->add('symbol', ChoiceType::class, [
-                'choices' => $options['companyOptions']->getOptions(),
-                'placeholder' => '--- Please select ---',
+                'choices' => $symbolOptions,
+                'placeholder' => $placeholder,
             ])
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',

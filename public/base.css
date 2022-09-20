@@ -4,6 +4,7 @@
 #history td {
     vertical-align: top;
 }
+
 #history-table {
     border: solid black 2px;
     border-collapse: collapse;
@@ -12,4 +13,9 @@
 #history-table th {
     padding: 3px 5px;
     border: solid black 1px;
+}
+
+#form-error-block {
+    background-color: #e78409;
+    border: solid 2px red;
 }
