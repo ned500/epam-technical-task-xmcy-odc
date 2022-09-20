@@ -1,13 +1,28 @@
 {% include 'base.html.twig' %}
 
 {% block body %}
-    <h1>Home</h1>
-    {{ form(form) }}
+    <h1>Trade</h1>
+    {{ form_start(form) }}
+    <table id="form">
+        <tbody>
+        {% for fieldName in ['symbol', 'startDate', 'endDate', 'email'] %}
+        <tr>
+            <th>{{ form_label(form[fieldName]) }}</th>
+            <td>{{ form_widget(form[fieldName]) }}</td>
+            <td>{{ form_errors(form[fieldName]) }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2">{{ form_row(form.submit) }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {{ form_end(form) }}
     {% if history %}
         <table id="history">
             <tr>
                 <td>{{ _self.table(history) }}</td>
-                <td>{{ _self.graph(history) }}</td>
+                <td>{{ _self.chart(history) }}</td>
             </tr>
         </table>
     {% endif %}
@@ -39,7 +54,7 @@
     </table>
 {% endmacro %}
 
-{% macro graph(history) %}
+{% macro chart(history) %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <canvas id="chart" width="800" height="400"
             data-labels='{{ history.prices|map(p => (p.date|date('Y-m-d')))|json_encode|raw }}'
@@ -52,10 +67,10 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
     <script src="{{ asset('base.js') }}"></script>
-    <script src="{{ asset('graph.js') }}"></script>
+    <script src="{{ asset('chart.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link href="{{ asset('base.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('base.css') }}" />
 {% endblock %}

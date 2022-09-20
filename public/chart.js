@@ -1,5 +1,8 @@
 $(document).ready(function () {
     const chart = $('#chart');
+    if (!chart.length) {
+        return;
+    }
     new Chart(chart, {
         type: 'line',
         data: {
