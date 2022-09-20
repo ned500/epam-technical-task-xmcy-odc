@@ -31,3 +31,8 @@ services:
         arguments:
             $historyUrl: '%env(string:HISTORY_URL)%'
             $historyApiKey: '%env(string:HISTORY_API_KEY)%'
+
+    App\Service\EmailSender:
+        arguments:
+            $fromAddress: '%env(string:EMAIL_FROM_ADDRESS)%'
+            $fromName: '%env(string:EMAIL_FROM_NAME)%'

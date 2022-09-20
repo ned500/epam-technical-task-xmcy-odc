@@ -6,6 +6,7 @@ use App\Exception\WebAccessException;
 use App\Form\MainType;
 use App\Model\CompanyOptionsInterface;
 use App\Model\FormData;
+use App\Model\NotifierInterface;
 use App\Service\History;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,7 @@ final class DefaultController extends AbstractController
      *
      * @noinspection VirtualTypeCheckInspection
      */
-    public function indexAction(Request $request, CompanyOptionsInterface $company, History $history): array
+    public function indexAction(Request $request, CompanyOptionsInterface $company, History $history, NotifierInterface $email): array
     {
         $form = $this->createForm(MainType::class, null, ['companyOptions' => $company]);
 
@@ -32,6 +33,7 @@ final class DefaultController extends AbstractController
             /** @var FormData $formData */
             $formData = $form->getData();
             $historyData = $history->getHistory($formData->symbol, $formData->startDate, $formData->endDate);
+            $email->notify($formData, $historyData);
         }
 
         return [
