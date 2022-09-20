@@ -10,7 +10,7 @@ RUN docker-php-ext-install opcache intl
 RUN pecl install xdebug apcu
 RUN docker-php-ext-enable xdebug apcu
 
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
+RUN #docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
 RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && mv composer.phar /usr/local/bin/composer
 
