@@ -3,7 +3,14 @@
 {% block body %}
     <h1>Home</h1>
     {{ form(form) }}
-    {{ history ? _self.table(history) }}
+    {% if history %}
+        <table id="history">
+            <tr>
+                <td>{{ _self.table(history) }}</td>
+                <td>{{ _self.graph(history) }}</td>
+            </tr>
+        </table>
+    {% endif %}
 
 {% endblock %}
 
@@ -32,10 +39,47 @@
     </table>
 {% endmacro %}
 
+{% macro graph(history) %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <canvas id="chart" width="800" height="400"></canvas>
+    <script lang="js">
+        // const ctx = document.getElementById('chart');
+        const myChart = new Chart('chart', {
+            type: 'line',
+            data: {
+                labels: [{{ history.prices|map(p => ("'" ~ p.date|date('Y-m-d') ~ "'"))|join(', ')|raw }}],
+                datasets: [{
+                    label: 'Open',
+                    data: [{{ history.prices|map(p => p.open|default)|join(', ') }}],
+                    backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+                    borderColor: ['rgba(54, 162, 235, 0.2)'],
+                }, {
+                    label: 'Close',
+                    data: [{{ history.prices|map(p => p.close|default)|join(', ') }}],
+                    backgroundColor: ['rgba(254, 145, 23, 0.2)'],
+                    borderColor: ['rgba(254, 145, 23, 0.2)'],
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        // beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endmacro %}
+
 {% block stylesheets %}
     <style>
+        #history {
+            margin-top: 1em;
+        }
+        #history td {
+            vertical-align: top;
+        }
         #history-table {
-            margin-top: 2em;
             border: solid black 2px;
             border-collapse: collapse;
         }
