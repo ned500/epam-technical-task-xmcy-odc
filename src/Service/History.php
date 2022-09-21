@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Exception\WebAccessException;
 use DateTimeInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
@@ -39,6 +40,8 @@ final class History
 
             $statusCode = $response->getStatusCode();
             $data = $response->toArray();
+        } catch (RedirectionExceptionInterface $exception) {
+            throw new WebAccessException(null, 'Redirection. (You may not have permission to get these data?)');
         } catch (Throwable $exception) {
             throw new WebAccessException($exception);
         }

@@ -7,8 +7,8 @@ use Throwable;
 
 class WebAccessException extends Exception
 {
-    public function __construct(?Throwable $originalException = null)
+    public function __construct(?Throwable $originalException = null, string $message = 'Web access issue')
     {
-        parent::__construct('Web access issue', 0, $originalException);
+        parent::__construct($message, 0, $originalException);
     }
 }
